@@ -10,20 +10,15 @@ Personal data are scattered everywhere. Gather them all without undue delay and 
 ## Game Controls
 
 ```
-            ┌──┐      ┌──┐
-   move     │ P│pause │ R│restart
-   ┌──┐     └──┘      └──┘
-   │ W│
-┌──┼──┼──┐  ┌─────────────┐
-│ A│ S│ D│  │    space    │ start
-└──┴──┴──┘  └─────────────┘
-
- ┌──┐                ┌──┐
- │ M│ debug mode     │ v│ victory
- └──┘                └──┘
-(hold)    ┌──┐
-          │ G│ log game status
-          └──┘
+                ┌───┐     ┌───┐     ┌───┐
+     run        │ R │     │ P │     │ M │ (hold) debug mode
+    ┌───┐       └───┘     └───┘     └───┘
+    │ W │      restart    pause          ┌───┐
+┌───┼───┼───┐                            │ G │ log game info
+│ A │ S │ D │                            └───┘
+└───┴───┴───┘  ┌─────────────────┐             ┌───┐
+               │      space      │ start       │ v │ victory
+               └─────────────────┘             └───┘
 ```
 
 ## Implementation
@@ -40,8 +35,10 @@ Once the game logic was in place, I wrapped the UI in a Web Component using Lit.
 
 The game defines the concept of Prey = fleeing from you, and Hunter = chasing you.
 
-Example: a pray
-![data](img/_docs/data.gif)
+
+Example: 
+> ![data](img/_docs/data.gif) _hello, I'm a prey!_
+
 
 The **fleeing logic** takes into account the player position. A pray moves towards the direction that will bring them further from the player. If the best thing to do is not moving the prey will stop, waiting for the player to make a move.
 
