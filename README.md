@@ -2,11 +2,10 @@
 
 This is a small single-player browser game I made just for fun, started while working in the domain of online Privacy around the time of [GDPR](https://en.wikipedia.org/wiki/General_Data_Protection_Regulation).
 
-It is about performing data take-out - *the manual way*.
+It is about performing data take-out - _the manual way_.
 Personal data are scattered everywhere. Gather them all without undue delay and watch out for the privacy auditors in their helicopters.
 
 ![demo](./img/docs/demo.gif)
-
 
 ## Game Controls
 
@@ -27,7 +26,6 @@ Personal data are scattered everywhere. Gather them all without undue delay and 
           └──┘
 ```
 
-
 ## Implementation
 
 This game was built from the ground up using just Typescript.
@@ -40,15 +38,14 @@ Once the game logic was in place, I wrapped the UI in a Web Component using Lit.
 
 ### Preys & Hunters
 
-The game defines the concept of Prey = fleeing from you, and Hunter = chasing you. 
+The game defines the concept of Prey = fleeing from you, and Hunter = chasing you.
 
 Example: a pray
 ![data](./img/docs/data.gif)
 
-The **fleeing logic** takes into account the player position. A pray moves towards the direction that will bring them further from the player. If the best thing to do is not moving the prey will stop, waiting for the player to make a move. 
+The **fleeing logic** takes into account the player position. A pray moves towards the direction that will bring them further from the player. If the best thing to do is not moving the prey will stop, waiting for the player to make a move.
 
 This strategy made preys impossible to catch, so some of them are a bit slower, while some are a bit dumber (they have a small chance of not choosing the best route). This diversity also helps preys to spread up on the maze, instead of clustering all together.
-
 
 The **hunting logic** is simpler, since hunters are flying and can ignore walls. They will constantly fly toward the player.
 Over time this causes them to cluster and move as one. This could be improved.
@@ -60,6 +57,7 @@ This feature shows several visual aids, used during the developent and makes log
 ![debug-mode](.img/docs/debug-mode.png)
 
 Example of these visual aids are:
+
 - characters id and current route
 - each cell shows min distance from player
 - highlights next decision points (forks or curves)

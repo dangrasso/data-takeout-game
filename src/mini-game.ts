@@ -23,17 +23,17 @@ enum GameScreen {
   GAME_OVER,
 }
 
-type CanvasCoordinates = { x: number; y: number };
-type GridCoordinates = { x: number; y: number };
+type CanvasCoordinates = {x: number; y: number};
+type GridCoordinates = {x: number; y: number};
 type DecisionPoint = {
   cell: Cell;
   distance: number;
   direction: Direction;
 };
 
-type NeighbourCells = { [D in Direction]?: Cell };
+type NeighbourCells = {[D in Direction]?: Cell};
 
-type DistanceTo = { distance: number, to: Cell }
+type DistanceTo = {distance: number; to: Cell};
 
 type Sprite = {
   image: HTMLImageElement;
@@ -193,7 +193,8 @@ class Maze {
     this.cellSize = cellSize;
     const lines = layout.split('\n').filter((line) => line);
     const rowsNum = lines.length;
-    const colsNum = lines.length && lines[0].split('').filter((char) => char).length;
+    const colsNum =
+      lines.length && lines[0].split('').filter((char) => char).length;
 
     this.height = rowsNum * this.cellSize;
     this.width = colsNum * this.cellSize;
@@ -207,7 +208,7 @@ class Maze {
           this.cells[x] = this.cells[x] || [];
           this.cells[x][y] = new Cell(
             char === ' ' ? CellType.OPEN : CellType.WALL,
-            { x, y },
+            {x, y},
             this.cellSize
           );
         })
@@ -257,7 +258,6 @@ class Maze {
           distance: scannedDistance,
           direction: dir,
         });
-
       });
     });
 
@@ -275,7 +275,7 @@ class Maze {
           return;
         }
 
-        const cachedDistance = dest.mazeDistanceMap.get(src)
+        const cachedDistance = dest.mazeDistanceMap.get(src);
         if (cachedDistance) {
           src.mazeDistanceMap.set(dest, cachedDistance);
           return;
@@ -283,15 +283,15 @@ class Maze {
 
         // TODO extract to own function
         // unknown? crawl to find shortest path (BFS)
-        const queue: DistanceTo[] = [{ distance: 0, to: src }]
+        const queue: DistanceTo[] = [{distance: 0, to: src}];
         const visited: Cell[] = [];
         let subpath = queue.shift();
         let found = false;
 
         while (subpath) {
-          const target = subpath.to
-          const distance = subpath.distance
-          
+          const target = subpath.to;
+          const distance = subpath.distance;
+
           // done condition
           if (target === dest) {
             src.mazeDistanceMap.set(dest, distance);
@@ -300,9 +300,9 @@ class Maze {
           }
 
           target.allowedDirs.forEach((dir) => {
-            const neighbour = target.neighbours[dir]
+            const neighbour = target.neighbours[dir];
             if (neighbour && !visited.includes(neighbour)) {
-              queue.push({ distance: distance + 1, to: neighbour });
+              queue.push({distance: distance + 1, to: neighbour});
             }
           });
 
@@ -326,7 +326,7 @@ class Maze {
   }
 
   get centerCell() {
-    return this.getCellAt({ x: this.width / 2, y: this.height / 2 });
+    return this.getCellAt({x: this.width / 2, y: this.height / 2});
   }
 
   getNeighbours(gridCoordinates: GridCoordinates) {
@@ -480,7 +480,7 @@ class Game {
   gamesPlayed = 0;
 
   // internal
-  private canvas: HTMLCanvasElement
+  private canvas: HTMLCanvasElement;
   private ctx!: CanvasRenderingContext2D;
   private _screen?: GameScreen;
   private keys: boolean[] = [];
@@ -514,7 +514,7 @@ class Game {
 
   get playTime() {
     if (!this.startedSince) {
-      return 0
+      return 0;
     }
 
     return (
@@ -552,7 +552,7 @@ class Game {
     this.canvas.width = this.maze.width;
     this.canvas.height = this.maze.height;
     this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D;
-    
+
     document.body.addEventListener('keydown', (e) => {
       if (e.repeat) {
         return;
@@ -564,9 +564,9 @@ class Game {
       }
       // DEBUG (m)ode => activate
       if (e.key === 'm') {
-        _debug = true
-        console.log('DEBUG (m)ode: on')
-        debugLog("Logger: that's right!")
+        _debug = true;
+        console.log('DEBUG (m)ode: on');
+        debugLog("Logger: that's right!");
       }
     });
 
@@ -587,8 +587,8 @@ class Game {
 
       // DEBUG (m)ode => deactivate
       if (e.key === 'm') {
-        _debug = false
-        console.log('DEBUG (m)ode: off')
+        _debug = false;
+        console.log('DEBUG (m)ode: off');
       }
       // DEBUG print full game status
       if (e.key === 'g') {
@@ -596,7 +596,6 @@ class Game {
       }
     });
 
-    
     // Preload all images for smoother transitions
     Promise.all([
       promiseLoadedImage('/img/screen-start.png'),
@@ -661,7 +660,7 @@ class Game {
     const preySize = this.maze.cellSize;
 
     const startingPositions = Array.from(this.maze.centerCell.mazeDistanceMap)
-      .filter(([,distance]) => distance > 3)
+      .filter(([, distance]) => distance > 3)
       .map(([cell]) => cell);
 
     this.totalPreys = 12;
@@ -720,9 +719,12 @@ class Game {
 
   restart() {
     if (
-      ![GameScreen.IN_GAME, GameScreen.PAUSE, GameScreen.GAME_OVER, GameScreen.VICTORY].includes(
-        this.screen
-      )
+      ![
+        GameScreen.IN_GAME,
+        GameScreen.PAUSE,
+        GameScreen.GAME_OVER,
+        GameScreen.VICTORY,
+      ].includes(this.screen)
     ) {
       return;
     }
@@ -819,11 +821,11 @@ class Game {
   }
 
   private wallColor(): string {
-    return _debug? 'gray' : '#b31d25';
+    return _debug ? 'gray' : '#b31d25';
   }
 
   private floorColor(): string {
-    return _debug? 'white' : '#f8ca35';
+    return _debug ? 'white' : '#f8ca35';
   }
 
   private draw(
@@ -862,11 +864,10 @@ class Game {
             Math.floor(cell.mazeDistance(currentCell)).toString(),
             cell.origin.x,
             cell.center.y,
-            cell.width,
+            cell.width
           );
         }
       }
-      
     });
 
     if (_debug) {
@@ -966,13 +967,14 @@ class Game {
     // even if not wall, if new position crosses a wall on any of the axes, align character
     const expectedCell = maze.getCellAt(character.center);
     Object.keys(expectedCell.neighbours)
-      .map(dirStr => dirStr as Direction)
-      .filter(
-        (dir) => {
-          const neighbour = expectedCell.neighbours[dir];
-          return !neighbour || (neighbour.isWall() && character.collidesWith(neighbour));
-        }
-      )
+      .map((dirStr) => dirStr as Direction)
+      .filter((dir) => {
+        const neighbour = expectedCell.neighbours[dir];
+        return (
+          !neighbour ||
+          (neighbour.isWall() && character.collidesWith(neighbour))
+        );
+      })
       .forEach((dir) => {
         // -->| frontal intersection
         if (dir === movingDirection.toString()) {
@@ -1071,7 +1073,7 @@ class Game {
       characterCell.nextDecisionPoints.forEach((dp) => {
         const profit = dp.cell.mazeDistance(from) - dp.distance;
         if (profit >= 0) {
-          possibleTargets.push({ dir: dp.direction, cell: dp.cell, profit });
+          possibleTargets.push({dir: dp.direction, cell: dp.cell, profit});
         }
       });
       possibleTargets.push({
@@ -1086,7 +1088,10 @@ class Game {
       if (possibleTargets[0].dir === null) {
         // if the best choice is not to move, don't move
         chosenTarget = possibleTargets[0];
-        debugLog(`${character.id} At ${characterCell}, opt chosen: STAY(null) for ${chosenTarget.profit}, choices:`, possibleTargets.map(t => `${t.dir} -> ${t.cell} for ${t.profit}`));
+        debugLog(
+          `${character.id} At ${characterCell}, opt chosen: STAY(null) for ${chosenTarget.profit}, choices:`,
+          possibleTargets.map((t) => `${t.dir} -> ${t.cell} for ${t.profit}`)
+        );
       } else {
         const randomisedChoice =
           Math.random() > 0.7 ? Math.floor(Math.random() * possibleTargets.length) : 0;
@@ -1113,7 +1118,7 @@ class Game {
 export class MiniGame extends LitElement {
   @query('#game')
   $canvas!: HTMLCanvasElement;
-  
+
   @state()
   gameDays = 0;
   @state()
@@ -1145,7 +1150,7 @@ export class MiniGame extends LitElement {
   }
 
   private _daysToFontSize(days: number) {
-    const sizeInPx = Math.max(10, Math.min(200, days))
+    const sizeInPx = Math.max(10, Math.min(200, days));
     return `${sizeInPx}px`;
   }
 
@@ -1154,9 +1159,8 @@ export class MiniGame extends LitElement {
       this.gameDays = Math.floor(elapsedSeconds);
       this.points = points;
       this.targetPoints = targetPoints;
-    }
+    };
     const takeoutGame = new Game(this.$canvas, ontick);
     takeoutGame.init();
   }
-
 }
