@@ -598,11 +598,11 @@ class Game {
 
     // Preload all images for smoother transitions
     Promise.all([
-      promiseLoadedImage('/img/screen-start.png'),
-      promiseLoadedImage('/img/screen-tutorial.png'),
-      promiseLoadedImage('/img/screen-pause.png'),
-      promiseLoadedImage('/img/screen-game-over.png'),
-      promiseLoadedImage('/img/screen-victory.png'),
+      promiseLoadedImage('/img/screens/screen-start.png'),
+      promiseLoadedImage('/img/screens/screen-tutorial.png'),
+      promiseLoadedImage('/img/screens/screen-pause.png'),
+      promiseLoadedImage('/img/screens/screen-game-over.png'),
+      promiseLoadedImage('/img/screens/screen-victory.png'),
     ]).then(([startImg, tutorialImg, pauseImg, gameOverImg, victoryImg]) => {
       this.startScreenImg = startImg;
       this.tutorialScreenImg = tutorialImg;
@@ -634,7 +634,7 @@ class Game {
     this.tickSinceLastFrame = 0;
     this.frameIndex = 0;
 
-    const playerSpriteImg = makeImage('/img/privacy_dev_walking.png');
+    const playerSpriteImg = makeImage('/img/sprites/privacy_dev_walking.png');
     const playerSprite: Sprite = {
       image: playerSpriteImg,
       frames: 4,
@@ -650,7 +650,7 @@ class Game {
       30
     );
 
-    const preySpriteImg = makeImage('/img/data.png');
+    const preySpriteImg = makeImage('/img/sprites/data.png');
     const preySprite: Sprite = {
       image: preySpriteImg,
       frames: 7,
@@ -678,7 +678,7 @@ class Game {
       );
     }
 
-    const hunterSpriteImg = makeImage('/img/authority.png');
+    const hunterSpriteImg = makeImage('/img/sprites/authority.png');
     const hunterSprite: Sprite = {
       image: hunterSpriteImg,
       frames: 4,

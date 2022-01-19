@@ -5,7 +5,7 @@ This is a small single-player browser game I made just for fun, started while wo
 It is about performing data take-out - _the manual way_.
 Personal data are scattered everywhere. Gather them all without undue delay and watch out for the privacy auditors in their helicopters.
 
-![demo](./img/docs/demo.gif)
+![demo](img/_docs/demo.gif)
 
 ## Game Controls
 
@@ -41,7 +41,7 @@ Once the game logic was in place, I wrapped the UI in a Web Component using Lit.
 The game defines the concept of Prey = fleeing from you, and Hunter = chasing you.
 
 Example: a pray
-![data](./img/docs/data.gif)
+![data](img/_docs/data.gif)
 
 The **fleeing logic** takes into account the player position. A pray moves towards the direction that will bring them further from the player. If the best thing to do is not moving the prey will stop, waiting for the player to make a move.
 
@@ -54,7 +54,7 @@ Over time this causes them to cluster and move as one. This could be improved.
 
 This feature shows several visual aids, used during the developent and makes logs very verbose.
 
-![debug-mode](.img/docs/debug-mode.png)
+![debug-mode](img/_docs/debug-mode.png)
 
 Example of these visual aids are:
 
@@ -73,7 +73,7 @@ And finally **performance**: this game is not really optimized. You get the idea
 
 ## Credits
 
-The [helicopter sprite](img/authority.png) is based on this [sprite](https://www.pokecommunity.com/showthread.php?t=384499) by [godofsalad](https://www.pokecommunity.com/member.php?u=642968)
+The [helicopter sprite](img/sprites/authority.png) is based on this [sprite](https://www.pokecommunity.com/showthread.php?t=384499) by [godofsalad](https://www.pokecommunity.com/member.php?u=642968)
 
 The start screens were created in collaboration with [nowiknowicki](https://www.behance.net/nowiknowicki)
 
