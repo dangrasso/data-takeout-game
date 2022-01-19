@@ -3,8 +3,8 @@
   "private": true,
   "version": "0.0.1",
   "description": "Data Takeout: the game",
-  "main": "mini-game.js",
-  "module": "mini-game.js",
+  "main": "dist/mini-game.js",
+  "module": "dist/mini-game.js",
   "type": "module",
   "scripts": {
     "build": "tsc",
@@ -51,3 +51,4 @@
   },
   "customElements": "custom-elements.json"
 }
+ 
