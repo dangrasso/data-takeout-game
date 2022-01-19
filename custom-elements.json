@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "src/mini-game.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "MiniGame",
+          "members": [
+            {
+              "kind": "field",
+              "name": "$canvas",
+              "type": {
+                "text": "HTMLCanvasElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "gameDays",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "points",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "targetPoints",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "method",
+              "name": "_daysToColor",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "days",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_daysToFontSize",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "days",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "mini-game",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "MiniGame",
+          "declaration": {
+            "name": "MiniGame",
+            "module": "src/mini-game.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "mini-game",
+          "declaration": {
+            "name": "MiniGame",
+            "module": "src/mini-game.ts"
+          }
+        }
+      ]
+    }
+  ]
+}
