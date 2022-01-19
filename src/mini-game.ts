@@ -1,5 +1,5 @@
 import {LitElement, html} from 'lit';
-import {customElement, property, query, state} from 'lit/decorators.js';
+import {customElement, query, state} from 'lit/decorators.js';
 
 const enum Direction {
   u = 'u',
@@ -76,7 +76,8 @@ const ASCII_MAZE_LAYOUT = `
 `;
 
 let _debug = false;
-function debugLog(msg: string, ...args: any) {
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+function debugLog(msg: string, ...args: any[]) {
   if (_debug) {
     console.log(msg, ...args);
   }
@@ -365,11 +366,11 @@ class Character {
   y: number;
   width: number;
   height: number;
-  velX: number = 0;
-  velY: number = 0;
+  velX = 0;
+  velY = 0;
   speed: number;
   sprite: Sprite;
-  spriteFrameIndex: number = 0;
+  spriteFrameIndex = 0;
   target?: Cell;
   targetDir: Direction | null = null;
   canFly: boolean;
@@ -382,7 +383,7 @@ class Character {
     speed: number,
     width: number,
     height: number,
-    canFly: boolean = false
+    canFly = false
   ) {
     this.id = id;
     this.x = coords.x;
@@ -475,8 +476,8 @@ class Game {
   player!: Character;
   preys: Character[] = [];
   hunters: Character[] = [];
-  totalPreys: number = 0;
-  gamesPlayed: number = 0;
+  totalPreys = 0;
+  gamesPlayed = 0;
 
   // internal
   private canvas: HTMLCanvasElement
@@ -496,15 +497,15 @@ class Game {
   private onTick: (points: number, totalPoints: number, elapsedSeconds: number) => void;
 
   // game loop controls
-  private initialized: boolean = false;
-  private looping: boolean = true;
+  private initialized = false;
+  private looping = true;
   private nextAnimationFrameRequest!: number;
   private tickSinceLastFrame!: number;
   private frameIndex!: number;
   private startedSince: number | null = null;
   private pausedSince: number | null = null;
   private overSince: number | null = null;
-  private durationPaused: number = 0;
+  private durationPaused = 0;
 
   constructor(canvas: HTMLCanvasElement, onTick: (points: number, totalPoints: number, elapsedSeconds: number) => void) {
     this.onTick = onTick;
@@ -551,12 +552,7 @@ class Game {
     this.canvas.width = this.maze.width;
     this.canvas.height = this.maze.height;
     this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D;
-    // this.ctx.fillStyle = '#f8ca35';
-    // this.ctx.fillRect(0, 0, this.maze.width, this.maze.height);
-    // this.ctx.strokeStyle = 'red'
-    // this.ctx.strokeStyle
-    // this.ctx.strokeText("Loading...", this.maze.width / 2, this.maze.height / 2)
-
+    
     document.body.addEventListener('keydown', (e) => {
       if (e.repeat) {
         return;
@@ -597,7 +593,6 @@ class Game {
       // DEBUG print full game status
       if (e.key === 'g') {
         console.log('==========GAME STATUS==========', this);
-        (window as any).gameStatus = this;
       }
     });
 
@@ -823,6 +818,14 @@ class Game {
     }
   }
 
+  private wallColor(): string {
+    return _debug? 'gray' : '#b31d25';
+  }
+
+  private floorColor(): string {
+    return _debug? 'white' : '#f8ca35';
+  }
+
   private draw(
     ctx: CanvasRenderingContext2D,
     maze: Maze,
@@ -924,14 +927,6 @@ class Game {
     });
   }
 
-  private wallColor(): string | CanvasGradient | CanvasPattern {
-    return _debug? 'gray' : '#b31d25';
-  }
-
-  private floorColor(): string | CanvasGradient | CanvasPattern {
-    return _debug? 'white' : '#f8ca35';
-  }
-
   /**
    * Checks collisions and sets new position and velocity accordingly
    * @param {Character} character
@@ -1015,7 +1010,7 @@ class Game {
       });
   }
 
-  private applyFriction(character: Character, friction: number = 0.8, minSpeed: number = 0.1) {
+  private applyFriction(character: Character, friction = 0.8, minSpeed = 0.1) {
     character.velX *= friction;
     character.velY *= friction;
     // stop if very slow
@@ -1120,11 +1115,11 @@ export class MiniGame extends LitElement {
   $canvas!: HTMLCanvasElement;
   
   @state()
-  gameDays: number = 0;
+  gameDays = 0;
   @state()
-  points: number = 0;
+  points = 0;
   @state()
-  targetPoints: number = 0;
+  targetPoints = 0;
 
   override render() {
     return html`
