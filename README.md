@@ -5,7 +5,7 @@ This is a small single-player browser game I made just for fun, started while wo
 It is about performing data take-out - *the manual way*.
 Personal data are scattered everywhere. Gather them all without undue delay and watch out for the privacy auditors in their helicopters.
 
-![demo](./demo.gif)
+![demo](./img/docs/demo.gif)
 
 
 ## Game Controls
@@ -43,7 +43,7 @@ Once the game logic was in place, I wrapped the UI in a Web Component using Lit.
 The game defines the concept of Prey = fleeing from you, and Hunter = chasing you. 
 
 Example: a pray
-![data](./img/data.gif)
+![data](./img/docs/data.gif)
 
 The **fleeing logic** takes into account the player position. A pray moves towards the direction that will bring them further from the player. If the best thing to do is not moving the prey will stop, waiting for the player to make a move. 
 
@@ -57,7 +57,7 @@ Over time this causes them to cluster and move as one. This could be improved.
 
 This feature shows several visual aids, used during the developent and makes logs very verbose.
 
-![debug-mode](.img/debug-mode.png)
+![debug-mode](.img/docs/debug-mode.png)
 
 Example of these visual aids are:
 - characters id and current route
