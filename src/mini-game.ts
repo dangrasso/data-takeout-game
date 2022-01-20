@@ -538,7 +538,9 @@ class Game {
     } else if (newScreen === GameScreen.TUTORIAL) {
       this.ctx.drawImage(this.tutorialScreenImg, 0, 0, this.maze.width, this.maze.height);
     } else if (newScreen === GameScreen.PAUSE) {
+      this.ctx.globalAlpha = 0.8
       this.ctx.drawImage(this.pauseScreenImg, 0, 0, this.maze.width, this.maze.height);
+      this.ctx.globalAlpha = 1
     } else if (newScreen === GameScreen.GAME_OVER) {
       this.ctx.drawImage(this.gameOverScreenImg, 0, 0, this.maze.width, this.maze.height);
     } else if (newScreen === GameScreen.VICTORY) {
