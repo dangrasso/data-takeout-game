@@ -1,1 +1,0 @@
-{"version":3,"file":"mini-game.d.ts","sourceRoot":"","sources":["../src/mini-game.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,UAAU,EAAO,MAAM,KAAK,CAAC;AA4lCrC,qBACa,QAAS,SAAQ,UAAU;IAEtC,OAAO,EAAG,iBAAiB,CAAC;IAG5B,QAAQ,SAAK;IAEb,MAAM,SAAK;IAEX,YAAY,SAAK;IAER,MAAM;IAef,OAAO,CAAC,YAAY;IAQpB,OAAO,CAAC,eAAe;IAKd,YAAY,IAAI,IAAI;CAS9B"}
