@@ -1,14 +1,17 @@
-# data-takeout-game
+# Data Takeout: the game
 
 This is a small single-player browser game I made just for fun, started while working in the domain of online Privacy around the time of [GDPR](https://en.wikipedia.org/wiki/General_Data_Protection_Regulation).
 
 It is about performing data take-out - _the manual way_.
 Personal data are scattered everywhere. Gather them all without undue delay and watch out for the privacy auditors in their helicopters.
 
+## Game
+
+🕹 Play on 👉 https://dangrasso.github.io/data-takeout-game/
+
 ![demo](img/_docs/demo.gif)
 
-## Game Controls
-
+⌨️ Controls:
 ```
                 ┌───┐     ┌───┐     ┌───┐
      run        │ R │     │ P │     │ M │ (hold) debug mode
@@ -29,16 +32,34 @@ I decided not to use any dependency. This forced me to reason about rendering, a
 
 Once the game logic was in place, I wrapped the UI in a Web Component using Lit. This can be easily replaceable with your framework of choice, or even with no framework.
 
+### Run locally
+
+After installing node (>= 14.x) and the dependencies (`npm i`):
+```
+npm run build && npm run serve
+```
+The dev server will be generally started on http://localhost:8000/
+
+You can also automatically rebuild on changes with `npm run build:watch`
+
+### CI & Deployment
+
+This repo is deployed to Github Pages automatically via Github Actions on every commit to `main`. For details, check out the workflow [build-and-deploy](.github/workflows/build-and-deploy.yml). 
+
+Only the relevant files are published, use `npm run docs` to generate the equivalent bundle locally.
+
+Other tools used are:
+ - `npm run format` (manual) runs prettier to apply consistent formatting
+ - `npm run lint` runs eslint and a linter for Lit components
+ - `npm run analyze` scans for web components and generates a manifest
+
 ## Features
 
 ### Preys & Hunters
 
 The game defines the concept of Prey = fleeing from you, and Hunter = chasing you.
 
-
-Example: 
 > ![data](img/_docs/data.gif) _hello, I'm a prey!_
-
 
 The **fleeing logic** takes into account the player position. A pray moves towards the direction that will bring them further from the player. If the best thing to do is not moving the prey will stop, waiting for the player to make a move.
 
@@ -50,14 +71,12 @@ Over time this causes them to cluster and move as one. This could be improved.
 ### Debug mode
 
 This feature shows several visual aids, used during the developent and makes logs very verbose.
+Example of these visual aids are:
+ - characters id and current route
+ - cell distance from player
+ - highlights next decision points (forks or curves)
 
 ![debug-mode](img/_docs/debug-mode.png)
-
-Example of these visual aids are:
-
-- characters id and current route
-- each cell shows min distance from player
-- highlights next decision points (forks or curves)
 
 ## Known Limitations
 
