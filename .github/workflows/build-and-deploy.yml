@@ -22,11 +22,10 @@ jobs:
         run: npm run lint && npm run analyze
       - name: Test 🧪
         run: npm test --if-present
-      - name: Package 📦
+      - name: Package GH Pages 📦
         run: npm run docs
-      - name: Deploy 🚀
+      - name: Deploy GH Pages 🚀
         uses: JamesIves/github-pages-deploy-action@v4.2.2
         with:
           branch: gh-pages
           folder: docs
-          clean: true

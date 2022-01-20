@@ -16,9 +16,11 @@
     "format": "prettier \"**/*.{cjs,html,js,json,md,ts}\" --ignore-path ./.eslintignore --write",
     "analyze": "cem analyze --litelement --globs \"src/**/*.ts\"",
     "analyze:watch": "cem analyze --litelement --globs \"src/**/*.ts\" --watch",
-    "docs": "npm run docs:init && npm run docs:copy",
+    "docs": "npm run docs:init && npm run docs:html && npm run docs:js && npm run docs:img",
     "docs:init": "mkdir -p docs && touch docs/.nojekyll",
-    "docs:copy": "cp index.html docs && cp -R img docs && rm -rf docs/img/_* && cp dist/*.bundled.js docs/dist",
+    "docs:html": "cp index.html docs",
+    "docs:js": "mkdir -p docs/dist && cp dist/*.bundled.js docs/dist/",
+    "docs:img": "cp -R img docs && rm -rf docs/img/_*",
     "docs:clean": "rimraf docs",
     "serve": "wds --watch"
   },
