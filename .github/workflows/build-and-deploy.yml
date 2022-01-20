@@ -23,13 +23,7 @@ jobs:
       - name: Test 🧪
         run: npm test --if-present
       - name: Package 📦
-        run: |
-          mkdir -p docs
-          touch docs/.nojekyll
-          cp index.html docs/index.html
-          cp -R dist docs
-          cp -R img docs
-          rm -rf docs/img/_*
+        run: npm run docs
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4.2.2
         with:
