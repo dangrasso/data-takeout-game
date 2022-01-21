@@ -89,8 +89,10 @@ And finally **performance**: this game is not really optimized. You get the idea
 
 ## Credits
 
-The [helicopter sprite](img/sprites/authority.png) is based on this [sprite](https://www.pokecommunity.com/showthread.php?t=384499) by [godofsalad](https://www.pokecommunity.com/member.php?u=642968)
+The idea of the game and its core mechanics, especially on how to optimize prey movements, were the result of great teamwork and whiteboard sessions with [bjornarg](https://github.com/bjornarg).
 
 The start screens were created in collaboration with [nowiknowicki](https://www.behance.net/nowiknowicki)
+
+The [helicopter sprite](img/sprites/authority.png) is based on this [sprite](https://www.pokecommunity.com/showthread.php?t=384499) by [godofsalad](https://www.pokecommunity.com/member.php?u=642968)
 
 All pixel art for the sprites was created using [Piskel](https://www.piskelapp.com/)
