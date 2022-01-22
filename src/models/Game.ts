@@ -641,20 +641,20 @@ export class Game {
         profit: characterCell.mazeDistance(from),
       });
 
-      possibleTargets.sort((a, b) => b.profit - a.profit);
+      const [bestTarget, ...otherTargets] = possibleTargets.sort((a, b) => b.profit - a.profit);
       let chosenTarget;
 
-      if (possibleTargets[0].dir === null) {
-        // if the best choice is not to move, don't move
-        chosenTarget = possibleTargets[0];
+      if (bestTarget.dir === null || !otherTargets.length) {
+        // if the best/only choice is not to move, don't move
+        chosenTarget = bestTarget;
         this.debugLog(
-          `${character.id} At ${characterCell}, opt chosen: STAY(null) for ${chosenTarget.profit}, choices:`,
+          `${character.id} At ${characterCell}, optimal chosen: STAY(null) for ${chosenTarget.profit}, choices:`,
           possibleTargets.map((t) => `${t.dir} -> ${t.cell} for ${t.profit}`)
         );
       } else {
-        const randomisedChoice = Math.random() > 0.7 ? Math.floor(Math.random() * possibleTargets.length) : 0;
-        chosenTarget = possibleTargets[randomisedChoice];
-        this.debugLog(`${character.id} At ${characterCell}, ${randomisedChoice === 0 ? 'opt' : `subopt(${randomisedChoice})`} chosen: ${chosenTarget.dir} -> ${chosenTarget.cell} for ${chosenTarget.profit}, choices:`, possibleTargets.map(t => `${t.dir} -> ${t.cell} for ${t.profit}`));
+        const actSmartly = Math.random() <= 0.75; // 75% chance of doing the right thing
+        chosenTarget = actSmartly ? bestTarget : otherTargets[Math.floor(Math.random() * otherTargets.length)];
+        this.debugLog(`${character.id} At ${characterCell}, ${actSmartly ? 'optimal' : `suboptimal`} chosen: ${chosenTarget.dir} -> ${chosenTarget.cell} for ${chosenTarget.profit}, choices:`, possibleTargets.map(t => `${t.dir} -> ${t.cell} for ${t.profit}`));
       }
 
       character.target = chosenTarget.cell;
