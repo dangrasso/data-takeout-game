@@ -60,10 +60,16 @@ Other tools used are:
 
 ## Features
 
-### Preys & Hunters
+### Characters
 
-The game defines the concept of Prey = fleeing from you, and Hunter = chasing you.
+The game is based on these types of characters:
+ - Preys: fleeing from you
+ - Hunters: chasing you
 
+Oh, and there you are, somewhat in between: the Player!
+
+> ![privacy developer](img/_docs/privacy_dev_walking.gif) _Ready to collect some data!_
+ 
 #### Preys
 
 > ![data](img/_docs/data.gif)  _Hello, I'm a prey!_
