@@ -195,7 +195,7 @@ export class Game {
       );
     }
 
-    const hunterSpriteImg = makeImage('img/sprites/authority.png');
+    const hunterSpriteImg = makeImage('img/sprites/helicopter.png');
     const hunterSprite: Sprite = {
       image: hunterSpriteImg,
       frames: 4,
