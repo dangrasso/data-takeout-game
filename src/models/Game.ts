@@ -177,7 +177,7 @@ export class Game {
     const preySize = this.maze.cellSize;
 
     const startingPositions = Array.from(this.maze.centerCell.mazeDistanceMap)
-      .filter(([, distance]) => distance > 3)
+      .filter(([, distance]) => distance > 5)
       .map(([cell]) => cell);
 
     this.totalPreys = 12;
@@ -188,7 +188,7 @@ export class Game {
           `g${this.gamesPlayed}-prey-${i}`,
           startingPositions[Math.floor(Math.random() * startingPositions.length)].origin,
           preySprite,
-          3,
+          2.8,
           preySize,
           preySize
         )
