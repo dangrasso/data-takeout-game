@@ -53,7 +53,6 @@ export class Game {
     return Controllers.combineActiveInputs(this.controllers)
   }
 
-
   get playTime() {
     if (!this.startedSince) {
       return 0;
@@ -97,10 +96,10 @@ export class Game {
     this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D;
 
     this.controllers = Controllers.initControllers(document, {
-      next: this.nextScreen,
-      pause: this.togglePausedScreen,
-      restart: this.restart,
-      victory: this.gameWon,
+      next: () => this.nextScreen(),
+      pause: () => this.togglePausedScreen(),
+      restart: () => this.restart(),
+      victory: () => this.gameWon(),
       stats: () => console.log('===== GAME STATUS =====', this),
       enterDebugMode: () => {
         this.debugMode = true;
