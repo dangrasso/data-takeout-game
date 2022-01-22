@@ -96,10 +96,71 @@ export class KeyboardController extends Controller {
   }
 }
 
+class TouchController extends Controller {
+  touchOriginX?: number;
+  touchOriginY?: number;
+  
+  constructor(document: Document, hooks: ControllerHooks) {
+    super(hooks)
+    const $touchElement = document.body
+    $touchElement.style.touchAction = 'pinch-zoom'; // only keeps double-finger standard interactions with the browser
+    $touchElement.addEventListener('touchstart', this.handleTouchStart.bind(this), false);
+    $touchElement.addEventListener('touchmove', this.handleTouchMove.bind(this), false);
+    $touchElement.addEventListener('touchend', this.handleTouchEnd.bind(this), false);
+  }
+
+  handleTouchStart(e: TouchEvent) {
+    e.preventDefault();
+    if (e.touches.length == 1) {
+      this.touchOriginX = e.touches[0].clientX;
+      this.touchOriginY = e.touches[0].clientY;
+    } else if (e.touches.length == 2) {
+      this.hooks.pause();
+    }
+  }
+
+  handleTouchMove(e: TouchEvent) {
+    e.preventDefault();
+    if (e.touches.length == 1 && typeof this.touchOriginX == 'number' && typeof this.touchOriginY == 'number') {
+      const destX = e.touches[0].clientX;
+      const destY = e.touches[0].clientY;
+      const deltaX = destX - this.touchOriginX;
+      const deltaY = destY - this.touchOriginY;
+
+      // Avoid too sensitive diagonal movements, by dividing the touch space into 8 slices (up, down, left, right + diagonals).
+      // Allow diagonal move if touch is on the diagonal slices. 
+      // Apply only horizontal/vertical move if touch is on the orthogonal slices. These are narrower
+      const ratioXY = Math.abs(deltaX/deltaY)
+      const mostlyHorizontally = ratioXY > 3;
+      const mostlyVertically = ratioXY < 0.33;
+      
+      const moveThresholdPx = 10
+      this.activeInputs.up = !mostlyHorizontally && deltaY < -moveThresholdPx;
+      this.activeInputs.down = !mostlyHorizontally && deltaY > moveThresholdPx;
+      this.activeInputs.right = !mostlyVertically && deltaX > moveThresholdPx;
+      this.activeInputs.left = !mostlyVertically && deltaX < -moveThresholdPx;  
+    }
+  }
+
+  handleTouchEnd(e: TouchEvent) {
+    e.preventDefault();
+    if (e.touches.length == 0) {
+      this.hooks.next();
+      this.touchOriginX = undefined;
+      this.touchOriginY = undefined;
+      this.activeInputs.up = false;
+      this.activeInputs.right = false;
+      this.activeInputs.down = false;
+      this.activeInputs.left = false;
+    }
+  }
+}
+
 export class Controllers {
   static initControllers(document: Document, hooks: ControllerHooks): Controller[] {
     const controllers = [
-      new KeyboardController(document, hooks)
+      new KeyboardController(document, hooks),
+      new TouchController(document, hooks)
     ]
     return controllers
   }
