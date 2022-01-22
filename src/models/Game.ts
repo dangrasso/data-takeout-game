@@ -14,6 +14,7 @@ export class Game {
   preys: Character[] = [];
   hunters: Character[] = [];
   totalPreys = 0;
+  totalHunters = 0;
   gamesPlayed = 0;
   debugMode = false
 
@@ -203,8 +204,9 @@ export class Game {
     };
     const hunterSize = this.maze.cellSize * 2;
 
+    this.totalHunters = 4
     this.hunters = [];
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < this.totalHunters; i++) {
       this.hunters.push(
         new Character(
           `g${this.gamesPlayed}-hunter-${i}`,
@@ -307,9 +309,9 @@ export class Game {
       this.updatePosition(prey, this.maze);
     });
 
-    // Move hunters
+    // Move hunters (as a pack)
+    this.setHuntersPackIntent(this.hunters, this.player, this.maze);
     this.hunters.forEach((hunter) => {
-      this.setHunterIntent(hunter, this.player, this.maze);
       // this.applyFriction(hunter);
       this.updatePosition(hunter, this.maze);
     });
@@ -579,10 +581,42 @@ export class Game {
     this.fleeSmartlyFrom(prey, playerCell, maze, percentScared * prey.speed);
   }
 
-  private setHunterIntent(hunter: Character, player: Character, maze: Maze) {
+  private setHuntersPackIntent(hunters: Character[], player: Character, maze: Maze) {
     const playerCell = maze.getCellAt(player.center);
-    hunter.target = playerCell;
-    this.goStraightTowards(hunter, hunter.target, hunter.speed);
+    
+    // 1. The "alpha" hunter (currently closest to player) goes straight to it.
+    const [alphaHunter, ...remainingHunters] = [...hunters]
+      .sort((a, b) => a.pixelDistance(player) - b.pixelDistance(player));
+    alphaHunter.target = playerCell;
+    this.goStraightTowards(alphaHunter, alphaHunter.target, alphaHunter.speed);
+
+    // 2. other hunters surround the player
+    const aimedEscapeCell = playerCell.nextDecisionPoints
+      .find(p => p.direction === player.orientation)
+      ?.cell;
+    const otherEscapeCells = playerCell.nextDecisionPoints
+      .filter(p => p.direction != player.orientation)
+      .map(dp => dp.cell);
+    
+    // Start from where the player is aiming to, then cover all remaining escape routes, sending each time the closest hunter.
+    const sortedEscapeCells = aimedEscapeCell ? [aimedEscapeCell, ...otherEscapeCells] : otherEscapeCells;
+    sortedEscapeCells.forEach((escapeCell) => {
+      const closestHunter = remainingHunters
+        .sort((a, b) => a.pixelDistance(escapeCell) - b.pixelDistance(escapeCell))
+        .shift();
+      if (closestHunter) {
+        closestHunter.target = escapeCell;
+        this.goStraightTowards(closestHunter, closestHunter.target, closestHunter.speed);
+      }
+    })
+
+    // If there are extra hunters, send them to the closest escape route from where they are.
+    remainingHunters.forEach(hunter => {
+      hunter.target = [playerCell, ...sortedEscapeCells]
+        .sort((a, b) => a.pixelDistance(hunter) - b.pixelDistance(hunter))
+        [0];
+      this.goStraightTowards(hunter, hunter.target, hunter.speed);
+    });
   }
 
   private fleeSmartlyFrom(character: Character, from: Cell, maze: Maze, speed: number) {
@@ -624,7 +658,6 @@ export class Game {
       }
 
       character.target = chosenTarget.cell;
-      character.targetDir = chosenTarget.dir;
     }
     this.goStraightTowards(character, character.target, speed);
   }
