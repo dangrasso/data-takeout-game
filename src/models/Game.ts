@@ -663,6 +663,13 @@ export class Game {
   }
 
   private goStraightTowards(character: Character, target: Cell, speed: number) {
+    if (character.pixelDistance(target) < 1) {
+      // arrived!
+      character.velX = 0;
+      character.velY = 0;
+      return;
+    }
+    
     const dx = target.center.x - character.center.x;
     const dy = target.center.y - character.center.y;
     const norm = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
