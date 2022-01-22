@@ -15,7 +15,6 @@ export class Character {
   sprite: Sprite;
   spriteFrameIndex = 0;
   target?: Cell;
-  targetDir: Direction | null = null;
   canFly: boolean;
   private _orientation: Direction = Direction.d;
 
@@ -103,6 +102,13 @@ export class Character {
     );
   }
 
+  pixelDistance(to: Cell | Character) {
+    return Math.sqrt(
+      Math.pow(this.center.x - to.center.x, 2) +
+      Math.pow(this.center.y - to.center.y, 2)
+    );
+  }
+
   move(dir: Direction, speed: number = this.speed) {
     this.velX = dir === Direction.l ? -speed : dir === Direction.r ? speed : 0;
     this.velY = dir === Direction.u ? -speed : dir === Direction.d ? speed : 0;
@@ -111,5 +117,9 @@ export class Character {
   get orientation() {
     this._orientation = this.movingDirection || this._orientation;
     return this._orientation;
+  }
+
+  get targetDir() {
+    return this.target ? this.orientation : null;
   }
 }

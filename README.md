@@ -64,22 +64,34 @@ Other tools used are:
 
 The game defines the concept of Prey = fleeing from you, and Hunter = chasing you.
 
-> ![data](img/_docs/data.gif) _hello, I'm a prey!_
+#### Preys
 
-The **fleeing logic** takes into account the player position. A pray moves towards the direction that will bring them further from the player. If the best thing to do is not moving the prey will stop, waiting for the player to make a move.
+> ![data](img/_docs/data.gif)  _Hello, I'm a prey!_
 
-This strategy made preys impossible to catch, so some of them are a bit slower, while some are a bit dumber (they have a small chance of not choosing the best route). This diversity also helps preys to spread up on the maze, instead of clustering all together.
+The **fleeing logic** takes into account the player position. A prey moves towards the direction that will bring them furthest from the player. If the best thing to do is not moving the prey will stop, waiting for the player to make a move.
 
-The **hunting logic** is simpler, since hunters are flying and can ignore walls. They will constantly fly toward the player.
-Over time this causes them to cluster and move as one. This could be improved.
+This strategy made preys impossible to catch, so I made them a bit slower than the player and a bit dumber (they have a 25% chance of not choosing the best route when they make a move). This randomness also helps preys to spread up on the maze, instead of clustering all together.
+
+Preys also get scared when the player is close to them. Their speed reflects how scared or safe they feel.
+
+#### Hunters
+
+> ![helicopter](img/_docs/helicopter.gif)  _Beware, I'm a hunter!_
+
+The **hunting logic** is not affected by walls, since hunters are flying. 
+
+Hunters are slow but smart and act as a pack:
+- they select an "alpha" hunter (the closest) that'll fly towards the player directly
+- another hunter will try to anticipate the player on its current escape route
+- all remaining hunters will try to surround the player blocking all other escape routes
 
 ### Debug mode
 
-This feature shows several visual aids, used during the developent and makes logs very verbose.
+This feature shows several visual aids, used during the developent, and makes logs quite verbose.
 Example of these visual aids are:
- - characters id and current route
- - cell distance from player
- - highlights next decision points (forks or curves)
+ - characters id, bounding box, line to their current movement target
+ - maze distance from player on every cell
+ - next "decision points" from player, like forks or curves
 
 ![debug-mode](img/_docs/debug-mode.png)
 

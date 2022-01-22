@@ -14,6 +14,7 @@ export class Game {
   preys: Character[] = [];
   hunters: Character[] = [];
   totalPreys = 0;
+  totalHunters = 0;
   gamesPlayed = 0;
   debugMode = false
 
@@ -176,7 +177,7 @@ export class Game {
     const preySize = this.maze.cellSize;
 
     const startingPositions = Array.from(this.maze.centerCell.mazeDistanceMap)
-      .filter(([, distance]) => distance > 3)
+      .filter(([, distance]) => distance > 5)
       .map(([cell]) => cell);
 
     this.totalPreys = 12;
@@ -187,7 +188,7 @@ export class Game {
           `g${this.gamesPlayed}-prey-${i}`,
           startingPositions[Math.floor(Math.random() * startingPositions.length)].origin,
           preySprite,
-          3,
+          2.8,
           preySize,
           preySize
         )
@@ -203,8 +204,9 @@ export class Game {
     };
     const hunterSize = this.maze.cellSize * 2;
 
+    this.totalHunters = 4
     this.hunters = [];
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < this.totalHunters; i++) {
       this.hunters.push(
         new Character(
           `g${this.gamesPlayed}-hunter-${i}`,
@@ -307,9 +309,9 @@ export class Game {
       this.updatePosition(prey, this.maze);
     });
 
-    // Move hunters
+    // Move hunters (as a pack)
+    this.setHuntersPackIntent(this.hunters, this.player, this.maze);
     this.hunters.forEach((hunter) => {
-      this.setHunterIntent(hunter, this.player, this.maze);
       // this.applyFriction(hunter);
       this.updatePosition(hunter, this.maze);
     });
@@ -579,10 +581,42 @@ export class Game {
     this.fleeSmartlyFrom(prey, playerCell, maze, percentScared * prey.speed);
   }
 
-  private setHunterIntent(hunter: Character, player: Character, maze: Maze) {
+  private setHuntersPackIntent(hunters: Character[], player: Character, maze: Maze) {
     const playerCell = maze.getCellAt(player.center);
-    hunter.target = playerCell;
-    this.goStraightTowards(hunter, hunter.target, hunter.speed);
+    
+    // 1. The "alpha" hunter (currently closest to player) goes straight to it.
+    const [alphaHunter, ...remainingHunters] = [...hunters]
+      .sort((a, b) => a.pixelDistance(player) - b.pixelDistance(player));
+    alphaHunter.target = playerCell;
+    this.goStraightTowards(alphaHunter, alphaHunter.target, alphaHunter.speed);
+
+    // 2. other hunters surround the player
+    const aimedEscapeCell = playerCell.nextDecisionPoints
+      .find(p => p.direction === player.orientation)
+      ?.cell;
+    const otherEscapeCells = playerCell.nextDecisionPoints
+      .filter(p => p.direction != player.orientation)
+      .map(dp => dp.cell);
+    
+    // Start from where the player is aiming to, then cover all remaining escape routes, sending each time the closest hunter.
+    const sortedEscapeCells = aimedEscapeCell ? [aimedEscapeCell, ...otherEscapeCells] : otherEscapeCells;
+    sortedEscapeCells.forEach((escapeCell) => {
+      const closestHunter = remainingHunters
+        .sort((a, b) => a.pixelDistance(escapeCell) - b.pixelDistance(escapeCell))
+        .shift();
+      if (closestHunter) {
+        closestHunter.target = escapeCell;
+        this.goStraightTowards(closestHunter, closestHunter.target, closestHunter.speed);
+      }
+    })
+
+    // If there are extra hunters, send them to the closest escape route from where they are.
+    remainingHunters.forEach(hunter => {
+      hunter.target = [playerCell, ...sortedEscapeCells]
+        .sort((a, b) => a.pixelDistance(hunter) - b.pixelDistance(hunter))
+        [0];
+      this.goStraightTowards(hunter, hunter.target, hunter.speed);
+    });
   }
 
   private fleeSmartlyFrom(character: Character, from: Cell, maze: Maze, speed: number) {
@@ -607,29 +641,35 @@ export class Game {
         profit: characterCell.mazeDistance(from),
       });
 
-      possibleTargets.sort((a, b) => b.profit - a.profit);
+      const [bestTarget, ...otherTargets] = possibleTargets.sort((a, b) => b.profit - a.profit);
       let chosenTarget;
 
-      if (possibleTargets[0].dir === null) {
-        // if the best choice is not to move, don't move
-        chosenTarget = possibleTargets[0];
+      if (bestTarget.dir === null || !otherTargets.length) {
+        // if the best/only choice is not to move, don't move
+        chosenTarget = bestTarget;
         this.debugLog(
-          `${character.id} At ${characterCell}, opt chosen: STAY(null) for ${chosenTarget.profit}, choices:`,
+          `${character.id} At ${characterCell}, optimal chosen: STAY(null) for ${chosenTarget.profit}, choices:`,
           possibleTargets.map((t) => `${t.dir} -> ${t.cell} for ${t.profit}`)
         );
       } else {
-        const randomisedChoice = Math.random() > 0.7 ? Math.floor(Math.random() * possibleTargets.length) : 0;
-        chosenTarget = possibleTargets[randomisedChoice];
-        this.debugLog(`${character.id} At ${characterCell}, ${randomisedChoice === 0 ? 'opt' : `subopt(${randomisedChoice})`} chosen: ${chosenTarget.dir} -> ${chosenTarget.cell} for ${chosenTarget.profit}, choices:`, possibleTargets.map(t => `${t.dir} -> ${t.cell} for ${t.profit}`));
+        const actSmartly = Math.random() <= 0.75; // 75% chance of doing the right thing
+        chosenTarget = actSmartly ? bestTarget : otherTargets[Math.floor(Math.random() * otherTargets.length)];
+        this.debugLog(`${character.id} At ${characterCell}, ${actSmartly ? 'optimal' : `suboptimal`} chosen: ${chosenTarget.dir} -> ${chosenTarget.cell} for ${chosenTarget.profit}, choices:`, possibleTargets.map(t => `${t.dir} -> ${t.cell} for ${t.profit}`));
       }
 
       character.target = chosenTarget.cell;
-      character.targetDir = chosenTarget.dir;
     }
     this.goStraightTowards(character, character.target, speed);
   }
 
   private goStraightTowards(character: Character, target: Cell, speed: number) {
+    if (character.pixelDistance(target) < 1) {
+      // arrived!
+      character.velX = 0;
+      character.velY = 0;
+      return;
+    }
+    
     const dx = target.center.x - character.center.x;
     const dy = target.center.y - character.center.y;
     const norm = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
