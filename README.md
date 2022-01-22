@@ -99,4 +99,6 @@ The start screens were created in collaboration with [nowiknowicki](https://www.
 
 The [helicopter sprite](img/sprites/authority.png) is based on this [sprite](https://www.pokecommunity.com/showthread.php?t=384499) by [godofsalad](https://www.pokecommunity.com/member.php?u=642968)
 
+Kudos to [codeman38](http://www.zone38.net) for the pixelated font "Press Start".
+
 All pixel art for the sprites was created using [Piskel](https://www.piskelapp.com/)
