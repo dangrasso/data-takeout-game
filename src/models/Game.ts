@@ -3,8 +3,10 @@ import { Direction } from './core';
 import { Character } from './Character';
 import { Cell } from './Cell';
 import { Maze } from './Maze';
+import { ActiveControllerInputs, Controller, Controllers } from './Controller'
 import { Sprite, orientationToSpriteRow } from '../util/sprite';
 import { promiseLoadedImage, makeImage } from "../util/image";
+
 
 export class Game {
   maze!: Maze;
@@ -19,7 +21,7 @@ export class Game {
   private canvas: HTMLCanvasElement;
   private ctx!: CanvasRenderingContext2D;
   private _screen?: GameScreen;
-  private keys: boolean[] = [];
+  private controllers: Controller[] = [];
 
   // images
   private startScreenImg!: HTMLImageElement;
@@ -46,6 +48,11 @@ export class Game {
     this.onTick = onTick;
     this.canvas = canvas;
   }
+
+  get activeInputs(): ActiveControllerInputs {
+    return Controllers.combineActiveInputs(this.controllers)
+  }
+
 
   get playTime() {
     if (!this.startedSince) {
@@ -85,50 +92,25 @@ export class Game {
 
   async init() {
     this.maze = new Maze(ASCII_MAZE_LAYOUT, CELL_SIZE);
-    this.keys = [];
     this.canvas.width = this.maze.width;
     this.canvas.height = this.maze.height;
     this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D;
 
-    document.body.addEventListener('keydown', (e) => {
-      if (e.repeat) {
-        return;
-      }
-      if (['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft', 'w', 'a', 's', 'd'].indexOf(e.key) > -1) {
-        this.keys[e.keyCode] = true;
-      }
-      // DEBUG (m)ode => activate
-      if (e.key === 'm') {
+    this.controllers = Controllers.initControllers(document, {
+      next: this.nextScreen,
+      pause: this.togglePausedScreen,
+      restart: this.restart,
+      victory: this.gameWon,
+      stats: () => console.log('===== GAME STATUS =====', this),
+      enterDebugMode: () => {
         this.debugMode = true;
-        console.log('DEBUG (m)ode: on');
+        console.log('DEBUG mode: ON');
         this.debugLog("Logger: that's right!");
-      }
-    });
-
-    document.body.addEventListener('keyup', (e) => {
-      this.keys[e.keyCode] = false;
-      if (e.key === 'p') {
-        this.togglePausedScreen();
-      }
-      if (e.key === 'r') {
-        this.restart();
-      }
-      if (e.key === ' ') {
-        this.nextScreen();
-      }
-      if (e.key === 'v') {
-        this.gameWon();
-      }
-
-      // DEBUG (m)ode => deactivate
-      if (e.key === 'm') {
+      },
+      exitDebugMode: () => {
         this.debugMode = false;
-        console.log('DEBUG (m)ode: off');
-      }
-      // DEBUG print full game status
-      if (e.key === 'g') {
-        console.log('==========GAME STATUS==========', this);
-      }
+        console.log('DEBUG mode: off');
+      },
     });
 
     // Preload all images for smoother transitions
@@ -316,7 +298,7 @@ export class Game {
     }
 
     // Set player velocity
-    this.setPlayerIntent(this.player);
+    this.setPlayerIntent(this.player, this.activeInputs);
     this.applyFriction(this.player);
 
     // Move preys
@@ -565,28 +547,21 @@ export class Game {
     }
   }
 
-  private setPlayerIntent(player: Character) {
-    const command = {
-        up: this.keys[38] || this.keys[87],
-        down: this.keys[40] || this.keys[83],
-        left: this.keys[37] || this.keys[65],
-        right: this.keys[39] || this.keys[68],
-    }
-
+  private setPlayerIntent(player: Character, activeInputs: ActiveControllerInputs) {
     if (Math.abs(player.velY) < player.speed) {
-      if (command.up) {
+      if (activeInputs.up) {
         player.velY--;
       }
-      if (command.down) {
+      if (activeInputs.down) {
         player.velY++;
       }
     }
 
     if (Math.abs(player.velX) < player.speed) {
-      if (command.left) {
+      if (activeInputs.left) {
         player.velX--;
       }
-      if (command.right) {
+      if (activeInputs.right) {
         player.velX++;
       }
     }    
