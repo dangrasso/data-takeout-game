@@ -24,6 +24,11 @@ Personal data are scattered everywhere. Gather them all without undue delay and 
                └─────────────────┘             └───┘
 ```
 
+☝️ Controls:
+ * swipe (and hold) -> move
+ * tap -> start
+ * tap (2-finger) -> pause
+
 ## Implementation
 
 This game was built from the ground up using just Typescript.
@@ -80,8 +85,7 @@ Example of these visual aids are:
 
 ## Known Limitations
 
-This game relies on keyboard input, and is therefore not mobile friendly.
-It would work by adding some touch input overlay.
+This game is mostly mobile friendly, but some features rely on keyboard input (like restarting & debug mode).
 
 It is also probably not working on some browsers: I targeted mainly Chrome and Firefox.
 
