@@ -1,17 +1,34 @@
 # Data Takeout: the game
 
-This is a small single-player browser game I made just for fun, started while working in the domain of online Privacy around the time of [GDPR](https://en.wikipedia.org/wiki/General_Data_Protection_Regulation).
+🕹 Play on https://dangrasso.github.io/data-takeout-game/
+
+This is a small single-player browser game I made just for fun, started while working in the domain of Privacy Engineering around the time of [GDPR](https://en.wikipedia.org/wiki/General_Data_Protection_Regulation).
 
 It is about performing data take-out - _the manual way_.
-Personal data are scattered everywhere. Gather them all without undue delay and watch out for the privacy auditors in their helicopters.
+Personal data of your users are scattered everywhere. Gather them all without undue delay and watch out for the privacy auditors in their helicopters. 
 
-## Game
-
-🕹 Play on 👉 https://dangrasso.github.io/data-takeout-game/
+This is fortunately very far from what I've seen in reality, but should help understand why Privacy Engineering, a Privacy-by-Design approach and a solid automation are important.
 
 ![demo](img/_docs/demo.gif)
 
-⌨️ Controls:
+## Table of Contents
+
+* [How to Play](#how-to-play)
+* [Implementation](#implementation)
+  * [Run locally](#run-locally)
+  * [CI &amp; Deployment](#ci--deployment)
+* [Features](#features)
+  * [Characters](#characters)
+    * [Preys](#preys)
+    * [Hunters](#hunters)
+  * [Maze](#maze)
+  * [Debug mode](#debug-mode)
+* [Known Limitations](#known-limitations)
+* [Credits](#credits)
+
+## How to Play
+
+⌨️ Keyboard controls:
 ```
                 ┌───┐     ┌───┐     ┌───┐
      run        │ R │     │ P │     │ M │ (hold) debug mode
@@ -24,7 +41,7 @@ Personal data are scattered everywhere. Gather them all without undue delay and 
                └─────────────────┘             └───┘
 ```
 
-☝️ Controls:
+☝️ Touch controls:
  * swipe (and hold) -> move
  * tap -> start
  * tap (2-finger) -> pause
@@ -117,17 +134,20 @@ The resulting maze:
 
 ### Debug mode
 
-This feature shows several visual aids, used during the developent, and makes logs quite verbose.
-Example of these visual aids are:
+This feature makes logs quite verbose and shows several visual aids useful during the development.
+
+Examples of these visual aids are:
  - characters id, bounding box, line to their current movement target
  - maze distance from player on every cell
- - next "decision points" from player, like forks or curves
+ - next decision points from player
 
 ![debug-mode](img/_docs/debug-mode.png)
 
 ## Known Limitations
 
-This game is mostly mobile friendly, but some features rely on keyboard input (like restarting & debug mode).
+This game is somewhat mobile friendly, but some features rely on keyboard input (like restarting & debug mode) and the touch controls are a bit clunky.
+
+There is no audio yet. Would be cool to add some sound effects or a soundrack.
 
 It is also probably not working on some browsers: I targeted mainly Chrome and Firefox.
 
