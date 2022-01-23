@@ -1,5 +1,5 @@
-export const TICKS_PER_FRAME = 10;
-export const CELL_SIZE = 30;
+export const TICKS_PER_FRAME = 5;
+export const CELL_SIZE = 25;
 export const ASCII_MAZE_LAYOUT = `
 +-------------------+
 |                   |

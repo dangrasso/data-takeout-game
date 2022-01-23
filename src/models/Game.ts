@@ -158,13 +158,16 @@ export class Game {
       directional: true,
       pauseOnIdle: true,
     };
+    const playerHeight = this.maze.cellSize;
+    const playerWidth = playerHeight / 2;
+
     this.player = new Character(
       `g${this.gamesPlayed}-player`,
       this.maze.centerCell.origin,
       playerSprite,
       3,
-      15,
-      30
+      playerWidth,
+      playerHeight
     );
 
     const preySpriteImg = makeImage('img/sprites/data.png');
