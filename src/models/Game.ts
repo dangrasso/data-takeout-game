@@ -613,8 +613,7 @@ export class Game {
     // If there are extra hunters, send them to the closest escape route from where they are.
     remainingHunters.forEach(hunter => {
       hunter.target = [playerCell, ...sortedEscapeCells]
-        .sort((a, b) => a.pixelDistance(hunter) - b.pixelDistance(hunter))
-        [0];
+        .sort((a, b) => a.pixelDistance(hunter) - b.pixelDistance(hunter))[0];
       this.goStraightTowards(hunter, hunter.target, hunter.speed);
     });
   }
