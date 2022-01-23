@@ -91,6 +91,30 @@ Hunters are slow but smart and act as a pack:
 - another hunter will try to anticipate the player on its current escape route
 - all remaining hunters will try to surround the player blocking all other escape routes
 
+### Maze
+
+The maze is very simple, it has walls and floor tiles.
+The cool part is that it is completely generated on the game start based on a [string input](src/config.ts).
+
+This is also when, for each floor tile, the shortest distance to each other tile is pre-computed, using a BFS algorithm, as well as the next "decision points" (forks and curves) in each direction.
+
+
+**Example:** a custom maze input
+```
++-------------------+
+|                   |
+| ### # ## ## # ### |
+|     # #   # #     |
+| #####       ##### |
+|     # #   # #     |
+| ### # ## ## # ### |
+|                   |
++-------------------+
+```
+The resulting maze:
+
+![custom_maze](img/_docs/custom-maze.png)
+
 ### Debug mode
 
 This feature shows several visual aids, used during the developent, and makes logs quite verbose.
